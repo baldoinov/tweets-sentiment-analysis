@@ -4,6 +4,9 @@ O aumento uso das redes sociais e a disponibilização de quantidades massivas d
 
 Partindo das definições acima, o objetivo do presente trabalho é executar a análise de sentimentos contidos em [Tweets coletados entre 01/08/2018 e 20/10/2018](https://www.kaggle.com/datasets/augustop/portuguese-tweets-for-sentiment-analysis).
 
+
+## Estrutura do Repositório
+
 ------------
 
     ├── LICENSE
@@ -41,6 +44,8 @@ Partindo das definições acima, o objetivo do presente trabalho é executar a a
     │       └── visualize.py
 
 ---
+
+## Referências
 
 > Sousa, João Pedro da Silva, Rodrigo Costa Uchoa do Nascimento, Renata Mendes de Araujo, e Orlando Bisacchi Coelho. 2021. “Não se perca no debate! Mineração de Argumentação em Redes Sociais”. P. 139–50 em Anais do Brazilian Workshop on Social Network Analysis and Mining (BraSNAM). SBC.
 
