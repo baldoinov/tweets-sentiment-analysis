@@ -36,6 +36,8 @@ def main(input_filepath, output_filepath, emoticons):
         {"train": train_dataset, "dev": dev_dataset, "test": test_dataset}
     )
 
+    dataset = dataset.rename_columns({"tweet_text": "text", "sentiment": "label"})
+
     dataset.save_to_disk(output_filepath)
 
 
@@ -83,6 +85,9 @@ def clean_text(example: dict) -> dict:
 
         # Restores emoticons
         text = text + " ".join(emoticons).replace("-", "")
+
+        # Removes trailing whitespace
+        text = text.strip()
 
         processed_batch.append(text)
 

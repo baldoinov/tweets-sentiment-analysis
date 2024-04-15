@@ -29,7 +29,7 @@ def classes_distributions_pie_plot(ds):
 
     fig.suptitle("Distribuição de Classes")
 
-    plt.savefig(fname="../reports/figures/class-distribution-for-dataset-splits.png")
+    plt.savefig(fname="../figures/class-distribution-for-dataset-splits.png")
     plt.show()
 
 
@@ -43,7 +43,7 @@ def number_of_words_per_tweet(df):
     ax.set_xlabel("")
     ax.set_ylabel("# Palavras por Tweet")
 
-    plt.savefig(fname="../reports/figures/number-of-words-per-tweet-in-train.png")
+    plt.savefig(fname="../figures/number-of-words-per-tweet-in-train.png")
     plt.show()
 
 
@@ -58,5 +58,5 @@ def tweets_wordcloud(df):
     plt.imshow(wcloud, interpolation="bilinear")
     plt.axis("off")
 
-    plt.savefig(fname="../reports/figures/worldcloud-in-train.png")
+    plt.savefig(fname="../figures/worldcloud-in-train.png")
     plt.show()

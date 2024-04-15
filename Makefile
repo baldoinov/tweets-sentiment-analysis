@@ -20,9 +20,6 @@ build_dataset: requirements
 	python3 src/build_dataset.py data/raw/ data/interim/without-emoticons/ --emoticons False
 
 
-build_eda_features: build_dataset
-	python3 src/build_features.py
-
 
 clean:
 	find . -type f -name "*.py[co]" -delete
