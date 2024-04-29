@@ -13,9 +13,7 @@ NUM_LABELS = 3
 MAX_LENGTH = 128
 ID2LABEL = {0: "Neutro", 1: "Positivo", 2: "Negativo"}
 LABEL2ID = {"Neutro": 0, "Positivo": 1, "Negativo": 2}
-MODEL_PATH = (
-    "models/bertimbau-finetuned-sentiment-analysis/checkpoint-625/"
-)
+MODEL_PATH = "models/bertimbau-finetuned-sentiment-analysis/checkpoint-625/"
 TOKENIZER = AutoTokenizer.from_pretrained(MODEL_PATH, use_fast=True)
 MODEL = AutoModelForSequenceClassification.from_pretrained(
     MODEL_PATH, num_labels=NUM_LABELS, id2label=ID2LABEL, label2id=LABEL2ID
@@ -26,8 +24,9 @@ MODEL = AutoModelForSequenceClassification.from_pretrained(
 def main():
 
     st.set_page_config(
-        page_title="Análise de Sentimentos em Tweets", page_icon="assets/CIBERDEMIcon.png"
-    ) 
+        page_title="Análise de Sentimentos em Tweets",
+        page_icon="assets/CIBERDEMIcon.png",
+    )
     st.title("Análise de Sentimentos em Tweets")
 
     # Input text box

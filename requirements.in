@@ -1,0 +1,17 @@
+accelerate
+black
+click
+datasets
+evaluate
+matplotlib
+numpy
+pandas
+ray[tune]
+seaborn
+streamlit
+torch
+torchdata
+torchtext
+transformers
+Unidecode
+wordcloud

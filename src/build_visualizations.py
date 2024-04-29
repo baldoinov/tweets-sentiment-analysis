@@ -1,3 +1,6 @@
+# This script was made to be run from inside notebooks/0.2-visualizing-the-dataset.ipynb
+
+
 import seaborn as sns
 import matplotlib.pyplot as plt
 
