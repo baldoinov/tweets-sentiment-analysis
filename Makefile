@@ -15,7 +15,7 @@ test_environment:
 requirements: test_environment
 	python3 -m pip install -e .
 	python3 -m pip install pip-tools
-	python3 -m pip-compile requirements.in
+	pip-compile requirements.in
 	python3 -m pip install -r requirements.txt
 
 

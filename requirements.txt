@@ -14,6 +14,10 @@ aiosignal==1.3.1
     # via
     #   aiohttp
     #   ray
+altair==5.3.0
+    # via streamlit
+asttokens==2.4.1
+    # via stack-data
 async-timeout==4.0.3
     # via aiohttp
 attrs==23.2.0
@@ -21,6 +25,13 @@ attrs==23.2.0
     #   aiohttp
     #   jsonschema
     #   referencing
+    #   streamlit
+black==24.4.2
+    # via -r requirements.in
+blinker==1.8.1
+    # via streamlit
+cachetools==5.3.3
+    # via streamlit
 certifi==2024.2.2
     # via requests
 charset-normalizer==3.3.2
@@ -28,7 +39,11 @@ charset-normalizer==3.3.2
 click==8.1.7
     # via
     #   -r requirements.in
+    #   black
     #   ray
+    #   streamlit
+comm==0.2.2
+    # via ipykernel
 contourpy==1.2.1
     # via matplotlib
 cycler==0.12.1
@@ -37,6 +52,10 @@ datasets==2.18.0
     # via
     #   -r requirements.in
     #   evaluate
+debugpy==1.8.1
+    # via ipykernel
+decorator==5.1.1
+    # via ipython
 dill==0.3.8
     # via
     #   datasets
@@ -44,6 +63,10 @@ dill==0.3.8
     #   multiprocess
 evaluate==0.4.1
     # via -r requirements.in
+exceptiongroup==1.2.1
+    # via ipython
+executing==2.0.1
+    # via stack-data
 filelock==3.13.3
     # via
     #   datasets
@@ -66,6 +89,10 @@ fsspec[http]==2024.2.0
     #   huggingface-hub
     #   ray
     #   torch
+gitdb==4.0.11
+    # via gitpython
+gitpython==3.1.43
+    # via streamlit
 huggingface-hub==0.22.2
     # via
     #   accelerate
@@ -77,12 +104,33 @@ idna==3.6
     # via
     #   requests
     #   yarl
+importlib-metadata==7.1.0
+    # via streamlit
+ipykernel==6.29.4
+    # via -r requirements.in
+ipython==8.24.0
+    # via ipykernel
+jedi==0.19.1
+    # via ipython
 jinja2==3.1.3
-    # via torch
+    # via
+    #   altair
+    #   pydeck
+    #   torch
+joblib==1.4.0
+    # via scikit-learn
 jsonschema==4.21.1
-    # via ray
+    # via
+    #   altair
+    #   ray
 jsonschema-specifications==2023.12.1
     # via jsonschema
+jupyter-client==8.6.1
+    # via ipykernel
+jupyter-core==5.7.2
+    # via
+    #   ipykernel
+    #   jupyter-client
 kiwisolver==1.4.5
     # via matplotlib
 markupsafe==2.1.5
@@ -92,6 +140,10 @@ matplotlib==3.8.3
     #   -r requirements.in
     #   seaborn
     #   wordcloud
+matplotlib-inline==0.1.7
+    # via
+    #   ipykernel
+    #   ipython
 mpmath==1.3.0
     # via sympy
 msgpack==1.0.8
@@ -104,19 +156,28 @@ multiprocess==0.70.16
     # via
     #   datasets
     #   evaluate
+mypy-extensions==1.0.0
+    # via black
+nest-asyncio==1.6.0
+    # via ipykernel
 networkx==3.2.1
     # via torch
 numpy==1.26.4
     # via
     #   -r requirements.in
     #   accelerate
+    #   altair
     #   contourpy
     #   datasets
     #   evaluate
     #   matplotlib
     #   pandas
     #   pyarrow
+    #   pydeck
+    #   scikit-learn
+    #   scipy
     #   seaborn
+    #   streamlit
     #   tensorboardx
     #   torchtext
     #   transformers
@@ -155,42 +216,77 @@ nvidia-nvtx-cu12==12.1.105
 packaging==24.0
     # via
     #   accelerate
+    #   altair
+    #   black
     #   datasets
     #   evaluate
     #   huggingface-hub
+    #   ipykernel
     #   matplotlib
     #   ray
+    #   streamlit
     #   tensorboardx
     #   transformers
 pandas==2.2.1
     # via
     #   -r requirements.in
+    #   altair
     #   datasets
     #   evaluate
     #   ray
     #   seaborn
+    #   streamlit
+parso==0.8.4
+    # via jedi
+pathspec==0.12.1
+    # via black
+pexpect==4.9.0
+    # via ipython
 pillow==10.3.0
     # via
     #   matplotlib
+    #   streamlit
     #   wordcloud
+platformdirs==4.2.1
+    # via
+    #   black
+    #   jupyter-core
+prompt-toolkit==3.0.43
+    # via ipython
 protobuf==5.26.1
     # via
     #   ray
+    #   streamlit
     #   tensorboardx
 psutil==5.9.8
-    # via accelerate
+    # via
+    #   accelerate
+    #   ipykernel
+ptyprocess==0.7.0
+    # via pexpect
+pure-eval==0.2.2
+    # via stack-data
 pyarrow==15.0.2
     # via
     #   datasets
     #   ray
+    #   streamlit
 pyarrow-hotfix==0.6
     # via datasets
+pydeck==0.9.0b1
+    # via streamlit
+pygments==2.17.2
+    # via ipython
+pympler==1.0.1
+    # via streamlit
 pyparsing==3.1.2
     # via matplotlib
 python-dateutil==2.9.0.post0
     # via
+    #   jupyter-client
     #   matplotlib
     #   pandas
+    #   streamlit
 pytz==2024.1
     # via pandas
 pyyaml==6.0.1
@@ -200,6 +296,10 @@ pyyaml==6.0.1
     #   huggingface-hub
     #   ray
     #   transformers
+pyzmq==26.0.2
+    # via
+    #   ipykernel
+    #   jupyter-client
 ray[tune]==2.12.0
     # via -r requirements.in
 referencing==0.35.0
@@ -215,6 +315,7 @@ requests==2.31.0
     #   huggingface-hub
     #   ray
     #   responses
+    #   streamlit
     #   torchdata
     #   torchtext
     #   transformers
@@ -228,16 +329,38 @@ safetensors==0.4.2
     # via
     #   accelerate
     #   transformers
+scikit-learn==1.4.2
+    # via -r requirements.in
+scipy==1.13.0
+    # via scikit-learn
 seaborn==0.13.2
     # via -r requirements.in
+semver==3.0.2
+    # via streamlit
 six==1.16.0
-    # via python-dateutil
+    # via
+    #   asttokens
+    #   python-dateutil
+smmap==5.0.1
+    # via gitdb
+stack-data==0.6.3
+    # via ipython
+streamlit==1.8.0
+    # via -r requirements.in
 sympy==1.12
     # via torch
 tensorboardx==2.6.2.2
     # via ray
+threadpoolctl==3.5.0
+    # via scikit-learn
 tokenizers==0.15.2
     # via transformers
+toml==0.10.2
+    # via streamlit
+tomli==2.0.1
+    # via black
+toolz==0.12.1
+    # via altair
 torch==2.2.2
     # via
     #   -r requirements.in
@@ -248,6 +371,11 @@ torchdata==0.7.1
     # via -r requirements.in
 torchtext==0.17.2
     # via -r requirements.in
+tornado==6.4
+    # via
+    #   ipykernel
+    #   jupyter-client
+    #   streamlit
 tqdm==4.66.2
     # via
     #   datasets
@@ -255,16 +383,29 @@ tqdm==4.66.2
     #   huggingface-hub
     #   torchtext
     #   transformers
+traitlets==5.14.3
+    # via
+    #   comm
+    #   ipykernel
+    #   ipython
+    #   jupyter-client
+    #   jupyter-core
+    #   matplotlib-inline
 transformers==4.39.3
     # via -r requirements.in
 triton==2.2.0
     # via torch
 typing-extensions==4.10.0
     # via
+    #   altair
+    #   black
     #   huggingface-hub
+    #   ipython
     #   torch
 tzdata==2024.1
     # via pandas
+tzlocal==5.2
+    # via streamlit
 unidecode==1.3.8
     # via -r requirements.in
 urllib3==2.2.1
@@ -272,6 +413,12 @@ urllib3==2.2.1
     #   requests
     #   responses
     #   torchdata
+validators==0.28.1
+    # via streamlit
+watchdog==4.0.0
+    # via streamlit
+wcwidth==0.2.13
+    # via prompt-toolkit
 wordcloud==1.9.3
     # via -r requirements.in
 xxhash==3.4.1
@@ -280,3 +427,5 @@ xxhash==3.4.1
     #   evaluate
 yarl==1.9.4
     # via aiohttp
+zipp==3.18.1
+    # via importlib-metadata
