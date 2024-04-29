@@ -1,8 +1,9 @@
-# Apresentar modelo com n-gram e depois apresentar o finetuning do modelo da hugging face
-# Ajustar função de custo para penalizar erros na classe menos representada
-# Under - oversmapling
-# Realizar teste posterior com o dataset do cardniffnlp
-# Como no @pysientimiento, realizar ajuste retirando o emoticon utilizado para query do texto
+# TODO: Identificar UMA implementação que te agrade e segui-lá até o fim.
+# TODO: Realizar teste posterior com o dataset do cardniffnlp
+# TODO: Como no @pysientimiento, realizar ajuste retirando o emoticon utilizado
+# para query do texto
+# TODO: Fazer under e oversampling do dataset.
+# TODO: Ajustar função de custo para penalizar erros na classe menos representada.
 
 import os
 import torch
@@ -40,8 +41,11 @@ model = AutoModelForSequenceClassification.from_pretrained(
     model_checkpoint, num_labels=NUM_LABELS
 )
 
+
 def tokenize_function(examples):
-    return tokenizer(examples["tweet_text"], padding="max_length", truncation=True, max_length=512)
+    return tokenizer(
+        examples["tweet_text"], padding="max_length", truncation=True, max_length=512
+    )
 
 
 def compute_metrics(eval_pred):
@@ -49,6 +53,7 @@ def compute_metrics(eval_pred):
     predictions = np.argmax(logits, axis=-1)
 
     return metric.compute(predictions=predictions, references=labels, average="macro")
+
 
 def main(ds):
 

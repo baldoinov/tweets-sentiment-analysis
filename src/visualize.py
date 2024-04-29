@@ -14,7 +14,7 @@ def classes_distributions_pie_plot(ds):
     for key, ax in zip(ds.keys(), axes):
         df = ds[key].to_pandas()
 
-        class_counts = df["sentiment"].value_counts()
+        class_counts = df["labels"].value_counts()
         class_percentages = (class_counts / class_counts.sum()) * 100
 
         ax.pie(
@@ -37,8 +37,11 @@ def number_of_words_per_tweet(df):
 
     fig, ax = plt.subplots(figsize=(10, 8))
 
-    x = df["tweet_text"].str.split().map(lambda x: len(x))
+    x = df["text"].str.split().map(lambda x: len(x))
+    max_words_in_tweet = x.max()
+
     sns.histplot(x=x, binwidth=3, stat="count", ax=ax)
+    plt.axvline(x=max_words_in_tweet, color="b")
 
     ax.set_xlabel("")
     ax.set_ylabel("# Palavras por Tweet")
@@ -49,7 +52,7 @@ def number_of_words_per_tweet(df):
 
 def tweets_wordcloud(df):
 
-    text = " ".join(tweet for tweet in df["tweet_text"])
+    text = " ".join(tweet for tweet in df["text"])
     wcloud = WordCloud(
         stopwords=SW, background_color="white", max_font_size=50, max_words=5000
     ).generate(text)

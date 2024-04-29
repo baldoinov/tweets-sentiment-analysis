@@ -96,7 +96,7 @@ scipy==1.13.0
 seaborn==0.13.2
 six==1.16.0
 smart-open==7.0.4
--e git+https://github.com/baldoinov/tweets-sentiment-analysis.git@3ed8203ff4333eca46bda5b245f7a8b81e8688f6#egg=src
+-e .
 srsly==1.0.7
 stack-data==0.6.3
 sympy==1.12

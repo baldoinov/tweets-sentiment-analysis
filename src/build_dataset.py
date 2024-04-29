@@ -36,7 +36,7 @@ def main(input_filepath, output_filepath, emoticons):
         {"train": train_dataset, "dev": dev_dataset, "test": test_dataset}
     )
 
-    dataset = dataset.rename_columns({"tweet_text": "text", "sentiment": "label"})
+    dataset = dataset.rename_columns({"tweet_text": "text", "sentiment": "labels"})
 
     dataset.save_to_disk(output_filepath)
 
@@ -51,8 +51,9 @@ def load_raw_dataset(input_filepath: str) -> Dataset:
     dataset = dataset.cast_column(
         column="sentiment", feature=ClassLabel(names=["Neutro", "Positivo", "Negativo"])
     )
-    
+
     return dataset
+
 
 def clean_text(example: dict) -> dict:
     """
