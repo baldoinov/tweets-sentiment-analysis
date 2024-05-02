@@ -20,19 +20,31 @@ from transformers import (
     TrainingArguments,
 )
 
+from torch.utils.data import Dataset, DataLoader
+
 from datasets import load_from_disk
 
 
 SEED = 42
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-BATCH_SIZE = 32
+BATCH_SIZE = 128
 NUM_LABELS = 3
-DATA_DIR = "data/interim/with-emoticon"
+MAX_LENGTH = 128
+TASK = "sentiment-analysis"
+MODEL_NAME = "bertimbau"
 
-id2label = {0: "Neutro", 1: "Positivo", 2: "Negativo"}
-label2id = {"Neutro": 0, "Positivo": 1, "Negativo": 2}
-model_checkpoint = "neuralmind/bert-base-portuguese-cased"
-model_output_dir = f"{model_checkpoint}-finetuned-sentiment-analysis"
+ID2LABEL = {0: "Neutro", 1: "Positivo", 2: "Negativo"}
+LABEL2ID = {"Neutro": 0, "Positivo": 1, "Negativo": 2}
+MODEL_CHECKPOINT = "neuralmind/bert-base-portuguese-cased"
+
+OUTPUT_DIR = f"models/{MODEL_NAME}-finetuned-{TASK}"
+
+
+
+
+class SentimentAnalysisDataset(Dataset):
+    def __init__(self, path, tokenizer, labels) -> None:
+        super().__init__()
 
 
 tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)

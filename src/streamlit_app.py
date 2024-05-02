@@ -30,10 +30,10 @@ def main():
     st.title("Análise de Sentimentos em Tweets")
 
     # Input text box
-    text = st.text_area("Insira um tweet para realizar a análise de sentimentos:")
+    text = st.text_area("Insira um tweet para realizar a análise de sentimento:")
 
     # Button to perform sentiment analysis
-    if st.button("Analyze Sentiment"):
+    if st.button("Processar"):
         cols = st.columns(spec=3, gap="medium")
         if text:
             text = text_cleaning(text)
