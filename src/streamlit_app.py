@@ -13,8 +13,9 @@ NUM_LABELS = 3
 MAX_LENGTH = 128
 ID2LABEL = {0: "Neutro", 1: "Positivo", 2: "Negativo"}
 LABEL2ID = {"Neutro": 0, "Positivo": 1, "Negativo": 2}
-MODEL_PATH = "models/bertimbau-finetuned-sentiment-analysis/checkpoint-625/"
-TOKENIZER = AutoTokenizer.from_pretrained(MODEL_PATH, use_fast=True)
+MODEL_CHECKPOINT = "neuralmind/bert-base-portuguese-cased"
+MODEL_PATH = "models/bertimbau-finetuned-sentiment-analysis/checkpoint-hugging-face/"
+TOKENIZER = AutoTokenizer.from_pretrained(MODEL_CHECKPOINT, use_fast=True)
 MODEL = AutoModelForSequenceClassification.from_pretrained(
     MODEL_PATH, num_labels=NUM_LABELS, id2label=ID2LABEL, label2id=LABEL2ID
 )
@@ -34,7 +35,7 @@ def main():
 
     # Button to perform sentiment analysis
     if st.button("Processar"):
-        cols = st.columns(spec=3, gap="medium")
+        cols = st.columns(spec=3)
         if text:
             text = text_cleaning(text)
             text = tokenize_function(TOKENIZER, text)

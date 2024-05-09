@@ -53,6 +53,31 @@ def number_of_words_per_tweet(df):
     plt.show()
 
 
+def metrics_from_training(df):
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+
+    epoch_aggregate = (
+        df.pivot_table(
+            index=["mode", "epoch"], values=["loss", "accuracy", "f1"], aggfunc="mean"
+        )
+        .reset_index()
+        .replace({"train": "Treino", "eval": "Validação"})
+        .rename({"epoch": "Epoch", "loss": "Loss", "f1": "F1-Score"}, axis=1)
+    )
+
+    metrics = ["Loss", "F1-Score"]
+
+    for idx, m in enumerate(metrics):
+        g = sns.lineplot(data=epoch_aggregate, x="Epoch", y=m, hue="mode", ax=axes[idx])
+        g.get_legend().set_title(None)
+
+    fig.suptitle("Métricas no Conjunto de Treino/Validação")
+    sns.despine()
+
+    plt.savefig(fname="../figures/metrics-in-train-and-eval.png")
+    plt.show()
+
 def tweets_wordcloud(df):
 
     text = " ".join(tweet for tweet in df["text"])

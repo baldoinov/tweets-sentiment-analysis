@@ -37,6 +37,8 @@ Partindo das definições acima, o objetivo do presente trabalho é executar a a
 
 ---
 
+## Resultados
+
 ## Referências
 
 > Sousa, João Pedro da Silva, Rodrigo Costa Uchoa do Nascimento, Renata Mendes de Araujo, e Orlando Bisacchi Coelho. 2021. “Não se perca no debate! Mineração de Argumentação em Redes Sociais”. P. 139–50 em Anais do Brazilian Workshop on Social Network Analysis and Mining (BraSNAM). SBC.

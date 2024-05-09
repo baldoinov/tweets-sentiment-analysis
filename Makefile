@@ -1,21 +1,28 @@
 .ONESHELL:
 .PHONY: clean data lint requirements
 
-ensure_environment:
+delete_environment:
 	find . -type d -name ".venv" -exec rm -rf {} \;
+
+
+create_environment: delete_environment
 	python3 -m venv .venv
-	
 	@echo ">>> New virtualenv created. ACTIVATE IT BEFORE PROCEEDING."
 
 
-test_environment:
+test_environment: create_environment
 	python3 test_environment.py
 
+test_sleep:
+	@echo "Antes do sleep"
+	sleep 2
+	@echo "Depois do sleep"
 
 requirements: test_environment
 	python3 -m pip install -e .
 	python3 -m pip install pip-tools
 	pip-compile requirements.in
+	sleep 1
 	python3 -m pip install -r requirements.txt
 
 
