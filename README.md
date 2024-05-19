@@ -4,6 +4,9 @@ O aumento uso das redes sociais e a disponibilização de quantidades massivas d
 
 Partindo das definições acima, o objetivo do presente trabalho é executar a análise de sentimentos contidos em [Tweets coletados entre 01/08/2018 e 20/10/2018](https://www.kaggle.com/datasets/augustop/portuguese-tweets-for-sentiment-analysis).
 
+## Exemplo de Utilização
+
+![Interface de utilização do modelo](/assets/streamlit-demo.gif)
 
 ## Estrutura do Repositório
 
@@ -18,9 +21,7 @@ Partindo das definições acima, o objetivo do presente trabalho é executar a a
     │
     ├── models               <- Trained and serialized models, model predictions, or model summaries
     │
-    ├── notebooks            <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                           the creator's initials, and a short `-` delimited description, e.g.
-    │                           `1.0-jqp-initial-data-exploration`.
+    ├── notebooks            <- Jupyter notebooks.
     │
     ├── requirements.txt     <- The requirements file for reproducing the analysis environment, e.g.
     │                           generated with `pip freeze > requirements.txt`
@@ -28,10 +29,9 @@ Partindo das definições acima, o objetivo do presente trabalho é executar a a
     ├── setup.py             <- makes project pip installable (pip install -e .) so src can be imported
     ├── src                  <- Source code for use in this project.
     │   │
-    │   ├─ build_dataset.py  <- Scripts to download or generate data
-    │   ├─ build_features.py <- Scripts to turn raw data into features for modeling
-    │   ├─ train.py          <- Scripts to train models
-    │   ├─ predict.py        <- Scripts to use trained models to make predictions
+    │   ├─ build_dataset.py  <- Script to download or generate data
+    │   ├─ train.py          <- Script to train model
+    │   ├─ streamlit_app.py  <- Script to use trained models to make predictions
     │   └─ visualize.py      <- Script to create exploratory and results oriented visualizations
     │ 
 
