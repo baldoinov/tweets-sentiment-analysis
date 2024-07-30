@@ -1,41 +1,50 @@
-.ONESHELL:
-.PHONY: clean data lint requirements
+#################################################################################
+# GLOBALS                                                                       #
+#################################################################################
 
-delete_environment:
-	find . -type d -name ".venv" -exec rm -rf {} \;
+PROJECT_NAME = src
+PYTHON_VERSION = 3.10
+PYTHON_INTERPRETER = python3
 
-
-create_environment: delete_environment
-	python3 -m venv .venv
-	@echo ">>> New virtualenv created. ACTIVATE IT BEFORE PROCEEDING."
-
-
-test_environment: create_environment
-	python3 test_environment.py
-
-test_sleep:
-	@echo "Antes do sleep"
-	sleep 2
-	@echo "Depois do sleep"
-
-requirements: test_environment
-	python3 -m pip install -e .
-	python3 -m pip install pip-tools
-	pip-compile requirements.in
-	sleep 1
-	python3 -m pip install -r requirements.txt
+#################################################################################
+# COMMANDS                                                                      #
+#################################################################################
 
 
-build_dataset: requirements
-	python3 src/build_dataset.py data/raw/ data/interim/with-emoticons/
-	python3 src/build_dataset.py data/raw/ data/interim/without-emoticons/ --emoticons False
+## Install Python Dependencies
+.PHONY: requirements
+requirements:
+	$(PYTHON_INTERPRETER) -m pip install -U pip
+	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 
 
+## Delete all compiled Python files
+.PHONY: clean
 clean:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
-	find . -type d -name "*.egg-info" -exec rm -rf {} \;
 
 
-lint:
-	black src
+## Format source code with black
+.PHONY: format
+format:
+	black --config pyproject.toml src
+
+
+## Set up python interpreter environment
+.PHONY: create_environment
+create_environment:
+	@bash -c "$(PYTHON_INTERPRETER) -m venv .venv"
+	@echo ">>> New virtualenv created. Activate it!"
+	
+
+#################################################################################
+# PROJECT RULES                                                                 #
+#################################################################################
+
+
+## Make Dataset
+.PHONY: data
+data: requirements
+	$(PYTHON_INTERPRETER) src/dataset.py
+
