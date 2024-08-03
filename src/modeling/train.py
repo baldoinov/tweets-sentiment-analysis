@@ -12,6 +12,8 @@ import evaluate
 
 import numpy as np
 
+import lightning as pl
+
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
@@ -40,11 +42,22 @@ MODEL_CHECKPOINT = "neuralmind/bert-base-portuguese-cased"
 OUTPUT_DIR = f"models/{MODEL_NAME}-finetuned-{TASK}"
 
 
+class LM4SentimentAnalysis(pl.LightningModule):
 
+    def __init__(self, args):
 
-class SentimentAnalysisDataset(Dataset):
-    def __init__(self, path, tokenizer, labels) -> None:
         super().__init__()
+        
+        self.tokenizer = AutoTokenizer.from_pretrained(args["model_checkpoint"])
+        self.model = AutoModelForSequenceClassification.from_pretrained(
+            args["model_checkpoint"], num_labels=args["num_labels"]
+        )
+    
+    def forward(self, input_ids, output_ids):
+        pass
+
+    def training_step():
+        pass
 
 
 tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
