@@ -91,3 +91,4 @@ target/
 
 # models checkpoints
 models/
+archive/
