@@ -4,39 +4,46 @@ import typer
 
 
 from glob import glob
-from tqdm import tqdm
 from pathlib import Path
 from loguru import logger
 
 
 from unidecode import unidecode
-from datasets import ClassLabel, DatasetDict, load_dataset
-from datasets import Dataset
+from transformers import AutoTokenizer
+from datasets import Dataset, ClassLabel, DatasetDict, load_dataset
 
-from src.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
-
-app = typer.Typer()
+from src.config import PROCESSED_DATA_DIR, RAW_DATA_DIR, MODEL_CHECKPOINT, MAX_LENGTH
 
 
-@app.command()
+APP = typer.Typer()
+TOKENIZER = AutoTokenizer.from_pretrained(MODEL_CHECKPOINT, use_fast=True)
+
+@APP.command()
 def main():
     """Runs data processing scripts to turn raw data from (../raw) into
     cleaned data ready to be analyzed (saved in ../processed).
     """
 
     input_path: Path = RAW_DATA_DIR
-    output_path: Path = (PROCESSED_DATA_DIR / "dataset.csv")
+    output_path: Path = PROCESSED_DATA_DIR / "dataset.csv"
 
     logger.info("Processing dataset...")
 
     dataset = load_raw_dataset(input_path)
     dataset = dataset.map(clean_text, batched=True)
+    dataset = split_data(dataset)
     dataset.save_to_disk(output_path)
 
     logger.success("Processing dataset complete.")
 
 
-def split_data(dataset: Dataset):
+def tokenize_function(examples: DatasetDict):
+    return TOKENIZER(
+        examples["text"], padding="max_length", max_length=MAX_LENGTH, truncation=True
+    )
+
+
+def split_data(dataset: Dataset) -> DatasetDict:
 
     train_dataset, test_dataset = dataset.train_test_split(
         test_size=0.3, stratify_by_column="labels", shuffle=True, seed=42
@@ -89,14 +96,14 @@ def clean_text(example: dict) -> dict:
         )
 
         # Stores emoticons and remove non-word chars
-        emoticons = re.findall("(?::|;|=)(?:-)?(?:\)|\(|D|P)", text)
+        # emoticons = re.findall("(?::|;|=)(?:-)?(?:\)|\(|D|P)", text)
         text = re.sub("[\W]+", " ", text)
 
         # Removes more than three repeated chars
         text = re.sub(r"(.)\1{2,3}", r"\1", text)
 
         # Restores emoticons
-        text = text + " ".join(emoticons).replace("-", "")
+        # text = text + " ".join(emoticons).replace("-", "")
 
         # Removes trailing whitespace
         text = text.strip()
@@ -108,23 +115,23 @@ def clean_text(example: dict) -> dict:
     return example
 
 
-def remove_emoticons(example: dict) -> dict:
-    """
-    Removes all non-word chars, including emoticons.
-    """
+# def remove_emoticons(example: dict) -> dict:
+#     """
+#     Removes all non-word chars, including emoticons.
+#     """
 
-    processed_batch = []
-    tweets = example["text"]
+#     processed_batch = []
+#     tweets = example["text"]
 
-    for text in tweets:
+#     for text in tweets:
 
-        text = re.sub("[\W]+", " ", text)
-        processed_batch.append(text)
+#         text = re.sub("[\W]+", " ", text)
+#         processed_batch.append(text)
 
-    example["text"] = processed_batch
-    return example
+#     example["text"] = processed_batch
+#     return example
 
 
 if __name__ == "__main__":
 
-    app()
+    APP()
