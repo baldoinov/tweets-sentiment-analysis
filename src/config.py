@@ -26,7 +26,7 @@ FIGURES_DIR = REPORTS_DIR / "figures"
 
 # Computed on the training set with sklearn.utils.class_weight.compute_class_weight
 CLASS_WEIGHTS = [5.63462742, 1.01479668, 0.54433414]
-NUM_WORKERS = 4
+NUM_WORKERS = 2
 
 
 NUM_LABELS = 3
