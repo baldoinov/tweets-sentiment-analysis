@@ -1,0 +1,15 @@
+-e .
+datasets
+lightning
+loguru
+nltk
+numpy < 2.0.0
+pandas
+python-dotenv
+scikit-learn
+torch
+tqdm
+transformers
+typer
+Unidecode
+wordcloud

@@ -5,27 +5,46 @@ from torch import nn
 from torch.optim import AdamW
 from torchmetrics import Accuracy, Precision, Recall, F1Score
 from transformers import AutoModelForSequenceClassification
-from src.config import MODEL_CHECKPOINT
 
 
 class SentimentAnalysisModel(pl.LightningModule):
-    def __init__(self, n_classes, learning_rate) -> None:
+    def __init__(
+        self,
+        n_classes: int,
+        learning_rate: float,
+        model_checkpoint: str,
+        id2label: dict,
+        label2id: dict,
+        class_weights: list,
+    ) -> None:
         super().__init__()
 
-        self.bert = AutoModelForSequenceClassification.from_pretrained(MODEL_CHECKPOINT, return_dict=True)
-        self.classifier = nn.Linear(self.bert.config.hidden_size, n_classes)
+        self.bert = AutoModelForSequenceClassification.from_pretrained(
+            model_checkpoint,
+            return_dict=True,
+            num_labels=n_classes,
+            id2label=id2label,
+            label2id=label2id,
+        )
+        for name, param in self.bert.named_parameters():
+            if not name.startswith("classifier"):
+                param.requires_grad = False
+
         self.learning_rate = learning_rate
-        self.criterion = nn.CrossEntropyLoss()
+        self.class_weights = torch.tensor(class_weights)
+        self.criterion = nn.CrossEntropyLoss(weight=self.class_weights)
 
         self.training_step_outputs = []
         self.training_step_labels = []
+        self.validation_step_outputs = []
+        self.validation_step_labels = []
 
         self.accuracy = Accuracy(task="multiclass", num_classes=n_classes)
         self.f1_score = F1Score(task="multiclass", num_classes=n_classes)
 
     def forward(self, input_ids, attention_mask, labels=None):
         output = self.bert(input_ids, attention_mask=attention_mask)
-        output = self.classifier(output.pooler_ouput)
+        output = output.logits
         loss = 0
 
         if labels is not None:
@@ -58,6 +77,9 @@ class SentimentAnalysisModel(pl.LightningModule):
         loss, outputs, labels = self.__common_step(batch, batch_idx)
         self.log("val_loss", loss, prog_bar=True, logger=True)
 
+        self.validation_step_outputs.append(outputs)
+        self.validation_step_labels.append(labels)
+
         return loss
 
     def test_step(self, batch, batch_idx):
@@ -84,7 +106,7 @@ class SentimentAnalysisModel(pl.LightningModule):
     def on_train_epoch_end(self) -> None:
         epoch_outputs = torch.cat(self.training_step_outputs)
         epoch_labels = torch.cat(self.training_step_labels)
- 
+
         self.log_dict(
             {
                 "train_acc": self.accuracy(epoch_outputs, epoch_labels),
@@ -96,4 +118,15 @@ class SentimentAnalysisModel(pl.LightningModule):
         )
 
     def on_validation_epoch_end(self) -> None:
-        return super().on_validation_epoch_end()
+        epoch_outputs = torch.cat(self.validation_step_outputs)
+        epoch_labels = torch.cat(self.validation_step_labels)
+
+        self.log_dict(
+            {
+                "val_acc": self.accuracy(epoch_outputs, epoch_labels),
+                "val_f1": self.f1_score(epoch_outputs, epoch_labels),
+            },
+            on_step=False,
+            on_epoch=True,
+            prog_bar=True,
+        )

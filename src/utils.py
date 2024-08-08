@@ -18,6 +18,7 @@ from src.config import PROCESSED_DATA_DIR, RAW_DATA_DIR, MODEL_CHECKPOINT, MAX_L
 APP = typer.Typer()
 TOKENIZER = AutoTokenizer.from_pretrained(MODEL_CHECKPOINT, use_fast=True)
 
+
 @APP.command()
 def main():
     """Runs data processing scripts to turn raw data from (../raw) into

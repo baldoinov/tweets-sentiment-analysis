@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements.in
 #
--e file:///home/baldoinov/baldoinov/Projetos/tweets-sentiment-analysis
+-e .
     # via -r requirements.in
 aiohttp==3.9.3
     # via

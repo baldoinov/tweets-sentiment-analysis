@@ -22,9 +22,7 @@ def classes_distributions_pie_plot(ds):
 
         ax.pie(
             class_percentages,
-            labels=class_percentages.index.map(
-                {0: "Neutro", 1: "Positivo", 2: "Negativo"}
-            ),
+            labels=class_percentages.index.map({0: "Neutro", 1: "Positivo", 2: "Negativo"}),
             autopct="%1.1f%%",
         )
 
@@ -58,9 +56,7 @@ def metrics_from_training(df):
     fig, axes = plt.subplots(1, 2, figsize=(12, 6))
 
     epoch_aggregate = (
-        df.pivot_table(
-            index=["mode", "epoch"], values=["loss", "accuracy", "f1"], aggfunc="mean"
-        )
+        df.pivot_table(index=["mode", "epoch"], values=["loss", "accuracy", "f1"], aggfunc="mean")
         .reset_index()
         .replace({"train": "Treino", "eval": "Validação"})
         .rename({"epoch": "Epoch", "loss": "Loss", "f1": "F1-Score"}, axis=1)
@@ -77,6 +73,7 @@ def metrics_from_training(df):
 
     plt.savefig(fname="../figures/metrics-in-train-and-eval.png")
     plt.show()
+
 
 def tweets_wordcloud(df):
 
