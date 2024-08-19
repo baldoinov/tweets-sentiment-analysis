@@ -115,24 +115,93 @@ def clean_text(example: dict) -> dict:
 
     return example
 
+def remove_non_word_chars(sample: dict) -> dict:
+    """
+    To be vectorized by `datasets`, the function has to receive a dict-lik object
+    and return a dict-like object. Passing a single string to this function will
+    not work.
+    """
+    processed_batch = []
+    tweets = sample["text"]
 
-# def remove_emoticons(example: dict) -> dict:
-#     """
-#     Removes all non-word chars, including emoticons.
-#     """
+    for text in tweets:
+        text = re.sub("[\W]+", "", text)
 
-#     processed_batch = []
-#     tweets = example["text"]
+    sample["text"] = processed_batch
 
-#     for text in tweets:
+    return sample
 
-#         text = re.sub("[\W]+", " ", text)
-#         processed_batch.append(text)
+def remove_urls(sample: dict) -> dict:
+    """
+    To be vectorized by `datasets`, the function has to receive a dict-lik object
+    and return a dict-like object. Passing a single string to this function will
+    not work.
+    """
+    processed_batch = []
+    tweets = sample["text"]
 
-#     example["text"] = processed_batch
-#     return example
+    for text in tweets:
+        text = re.sub(
+            "((?:(?<=[^a-zA-Z0-9]){0,}(?:(?:https?\:\/\/){0,1}(?:[a-zA-Z0-9\%]{1,}\:[a-zA-Z0-9\%]{1,}[@]){,1})(?:(?:\w{1,}\.{1}){1,5}(?:(?:[a-zA-Z]){1,})|(?:[a-zA-Z]{1,}\/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\:[0-9]{1,4}){1})){1}(?:(?:(?:\/{0,1}(?:[a-zA-Z0-9\-\_\=\-]){1,})*)(?:[?][a-zA-Z0-9\=\%\&\_\-]{1,}){0,1})(?:\.(?:[a-zA-Z0-9]){0,}){0,1})",
+            "",
+            text,
+        )
+
+    sample["text"] = processed_batch
+
+    return sample
+
+
+def remove_repeated_chars(sample: dict) -> dict:
+    """
+    To be vectorized by `datasets`, the function has to receive a dict-lik object
+    and return a dict-like object. Passing a single string to this function will
+    not work.
+    """
+    processed_batch = []
+    tweets = sample["text"]
+
+    for text in tweets:
+        text = re.sub(r"(.)\1{2,3}", r"\1", text)
+
+    sample["text"] = processed_batch
+
+    return sample
+
+def from_unicode_to_ascii(sample: dict) -> dict:
+    """
+    To be vectorized by `datasets`, the function has to receive a dict-lik object
+    and return a dict-like object. Passing a single string to this function will
+    not work.
+    """
+
+    processed_batch = []
+    tweets = sample["text"]
+
+    for text in tweets:
+        text = unidecode(text)
+
+    sample["text"] = processed_batch
+
+    return sample
+
+
+def remove_user_from_tweet(sample: dict) -> dict:
+    """
+    To be vectorized by `datasets`, the function has to receive a dict-lik object
+    and return a dict-like object. Passing a single string to this function will 
+    not work. 
+    """
+    processed_batch = []
+    tweets = sample["text"]
+
+    for text in tweets:
+        text = re.sub("@\w+", "", text.lower())
+
+    sample["text"] = processed_batch
+
+    return sample
 
 
 if __name__ == "__main__":
-
-    APP()
+    pass
