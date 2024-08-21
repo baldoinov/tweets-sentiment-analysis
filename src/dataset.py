@@ -3,23 +3,36 @@ import datasets
 import lightning as pl
 import fsspec as fs
 
-from glob import glob
-from torch.utils.data import DataLoader
+from pathlib import Path
 from datasets import ClassLabel
-from src.utils import clean_text, split_data, tokenize_function
+from torch.utils.data import DataLoader
+
+from src import utilities
+from transformers import AutoTokenizer
+from src.utilities import split_data, tokenize_function
 
 
 class TweetsDataModule(pl.LightningDataModule):
     def __init__(
-        self, raw_data_dir: str, processed_data_dir: str, batch_size: int, num_workers: int
+        self,
+        raw_data_dir: str,
+        processed_data_dir: str,
+        batch_size: int,
+        num_workers: int,
+        cleaning_steps: list[str],
+        max_length: int,
+        model_checkpoint: str,
     ) -> None:
 
         super().__init__()
 
-        self.raw_data_dir = raw_data_dir
+        self.raw_data_dir = Path(raw_data_dir)
+        self.processed_data_dir = Path(processed_data_dir)
         self.batch_size = batch_size
         self.num_workers = num_workers
-        self.processed_data_dir = processed_data_dir
+        self.cleaning_steps = cleaning_steps
+        self.max_length = max_length
+        self.tokenizer = AutoTokenizer.from_pretrained(model_checkpoint, use_fast=True)
 
     def prepare_data(self) -> None:
 
@@ -32,8 +45,21 @@ class TweetsDataModule(pl.LightningDataModule):
         dataset = dataset.cast_column(
             column="labels", feature=ClassLabel(names=["Neutro", "Positivo", "Negativo"])
         )
-        dataset = dataset.map(clean_text, batched=True)
-        dataset = dataset.map(tokenize_function, batched=True)
+
+        # Apply cleaning steps to tweets.
+        if self.cleaning_steps:
+            for transform in self.cleaning_steps:
+                transform = getattr(utilities, transform)
+                # Have to keep in memory because using cache was leading to data loss.
+                dataset = dataset.map(transform, batched=True, keep_in_memory=True)
+
+        # Have to keep in memory because using cache was leading to data loss.
+        dataset = dataset.map(
+            tokenize_function,
+            batched=True,
+            fn_kwargs={"tokenizer": self.tokenizer, "max_length": self.max_length},
+            keep_in_memory=True
+        )
         dataset = split_data(dataset)
         dataset.set_format("torch")
 

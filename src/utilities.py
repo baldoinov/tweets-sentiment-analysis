@@ -1,25 +1,16 @@
 # -*- coding: utf-8 -*-
 import re
-import typer
-
 
 from glob import glob
 from pathlib import Path
-from loguru import logger
 
 
 from unidecode import unidecode
-from transformers import AutoTokenizer
 from datasets import Dataset, ClassLabel, DatasetDict, load_dataset
 
-from src.config import PROCESSED_DATA_DIR, RAW_DATA_DIR, MODEL_CHECKPOINT, MAX_LENGTH
+from src.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
 
 
-APP = typer.Typer()
-TOKENIZER = AutoTokenizer.from_pretrained(MODEL_CHECKPOINT, use_fast=True)
-
-
-@APP.command()
 def main():
     """Runs data processing scripts to turn raw data from (../raw) into
     cleaned data ready to be analyzed (saved in ../processed).
@@ -28,19 +19,15 @@ def main():
     input_path: Path = RAW_DATA_DIR
     output_path: Path = PROCESSED_DATA_DIR / "dataset.csv"
 
-    logger.info("Processing dataset...")
-
     dataset = load_raw_dataset(input_path)
     dataset = dataset.map(clean_text, batched=True)
     dataset = split_data(dataset)
     dataset.save_to_disk(output_path)
 
-    logger.success("Processing dataset complete.")
 
-
-def tokenize_function(examples: DatasetDict):
-    return TOKENIZER(
-        examples["text"], padding="max_length", max_length=MAX_LENGTH, truncation=True
+def tokenize_function(examples: DatasetDict, tokenizer, max_length: int):
+    return tokenizer(
+        examples["text"], padding="max_length", max_length=max_length, truncation=True
     )
 
 
@@ -115,7 +102,8 @@ def clean_text(example: dict) -> dict:
 
     return example
 
-def remove_non_word_chars(sample: dict) -> dict:
+
+def from_unicode_to_ascii(sample: dict) -> dict:
     """
     To be vectorized by `datasets`, the function has to receive a dict-lik object
     and return a dict-like object. Passing a single string to this function will
@@ -125,11 +113,31 @@ def remove_non_word_chars(sample: dict) -> dict:
     tweets = sample["text"]
 
     for text in tweets:
-        text = re.sub("[\W]+", "", text)
+        text = unidecode(text)
+        processed_batch.append(text)
 
     sample["text"] = processed_batch
 
     return sample
+
+
+def remove_user_from_tweet(sample: dict) -> dict:
+    """
+    To be vectorized by `datasets`, the function has to receive a dict-lik object
+    and return a dict-like object. Passing a single string to this function will
+    not work.
+    """
+    processed_batch = []
+    tweets = sample["text"]
+
+    for text in tweets:
+        text = re.sub("@\w+", "", text)
+        processed_batch.append(text)
+
+    sample["text"] = processed_batch
+
+    return sample
+
 
 def remove_urls(sample: dict) -> dict:
     """
@@ -146,6 +154,25 @@ def remove_urls(sample: dict) -> dict:
             "",
             text,
         )
+        processed_batch.append(text)
+
+    sample["text"] = processed_batch
+
+    return sample
+
+
+def remove_non_word_chars(sample: dict) -> dict:
+    """
+    To be vectorized by `datasets`, the function has to receive a dict-lik object
+    and return a dict-like object. Passing a single string to this function will
+    not work.
+    """
+    processed_batch = []
+    tweets = sample["text"]
+
+    for text in tweets:
+        text = re.sub("[\W]+", " ", text)
+        processed_batch.append(text)
 
     sample["text"] = processed_batch
 
@@ -163,40 +190,25 @@ def remove_repeated_chars(sample: dict) -> dict:
 
     for text in tweets:
         text = re.sub(r"(.)\1{2,3}", r"\1", text)
+        processed_batch.append(text)
 
     sample["text"] = processed_batch
 
     return sample
 
-def from_unicode_to_ascii(sample: dict) -> dict:
+
+def remove_trailing_whitespace(sample: dict) -> dict:
     """
     To be vectorized by `datasets`, the function has to receive a dict-lik object
     and return a dict-like object. Passing a single string to this function will
     not work.
     """
-
     processed_batch = []
     tweets = sample["text"]
 
     for text in tweets:
-        text = unidecode(text)
-
-    sample["text"] = processed_batch
-
-    return sample
-
-
-def remove_user_from_tweet(sample: dict) -> dict:
-    """
-    To be vectorized by `datasets`, the function has to receive a dict-lik object
-    and return a dict-like object. Passing a single string to this function will 
-    not work. 
-    """
-    processed_batch = []
-    tweets = sample["text"]
-
-    for text in tweets:
-        text = re.sub("@\w+", "", text.lower())
+        text = text.strip()
+        processed_batch.append(text)
 
     sample["text"] = processed_batch
 

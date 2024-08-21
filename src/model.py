@@ -16,6 +16,7 @@ class SentimentAnalysisModel(pl.LightningModule):
         id2label: dict,
         label2id: dict,
         class_weights: list,
+        train_last_n_layers: int | str,
     ) -> None:
         super().__init__()
 
@@ -26,9 +27,17 @@ class SentimentAnalysisModel(pl.LightningModule):
             id2label=id2label,
             label2id=label2id,
         )
-        for name, param in self.bert.named_parameters():
-            if not name.startswith("classifier"):
+
+        self.train_last_n_layers = train_last_n_layers
+        parameters = list(self.bert.named_parameters())
+        
+        if self.train_last_n_layers == "full":
+            pass
+        else:
+            for idx in range(len(parameters) - self.train_last_n_layers):
+                param = parameters[idx][1]
                 param.requires_grad = False
+
 
         self.learning_rate = learning_rate
         self.class_weights = torch.tensor(class_weights)
