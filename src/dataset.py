@@ -32,7 +32,7 @@ class TweetsDataModule(pl.LightningDataModule):
         self.num_workers = num_workers
         self.cleaning_steps = cleaning_steps
         self.max_length = max_length
-        self.tokenizer = AutoTokenizer.from_pretrained(model_checkpoint, use_fast=True)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_checkpoint, use_fast=False)
 
     def prepare_data(self) -> None:
 

@@ -10,12 +10,12 @@ model:
     - 5.63462742
     - 1.01479668
     - 0.54433414
-  train_last_n_layers: 2
+  train_last_n_layers: "full"
 data:
   raw_data_dir: data/raw/
   processed_data_dir: data/processed/
-  batch_size: 64
-  num_workers: 4
+  batch_size: 128
+  num_workers: 2
   model_checkpoint: neuralmind/bert-base-portuguese-cased
   max_length: 128
   cleaning_steps:
@@ -33,10 +33,11 @@ trainer:
   logger:
     - class_path: lightning.pytorch.loggers.CSVLogger
       init_args:
-        save_dir: models/bertimbau-ft-classifier-head/
+        save_dir: models/bertimbau-ft-full/
   callbacks:
     - class_path: lightning.pytorch.callbacks.ModelCheckpoint
       init_args:
-        dirpath: models/bertimbau-ft-classifier-head/checkpoint/
+        dirpath: models/bertimbau-ft-full/checkpoint/
         filename: "bertimbau-{epoch}-{val_f1:.2f}"
         monitor: val_f1
+        every_n_train_steps: 100

@@ -41,10 +41,3 @@ create_environment:
 #################################################################################
 # PROJECT RULES                                                                 #
 #################################################################################
-
-
-## Make Dataset
-.PHONY: data
-data: requirements
-	$(PYTHON_INTERPRETER) src/dataset.py
-
